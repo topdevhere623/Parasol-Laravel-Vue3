@@ -1,0 +1,18 @@
+.bg-body {
+  background-color: $body-bg !important;
+}
+
+.w-33 {
+  width: 33.3%;
+}
+
+.d-flex-center {
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .justify-content-center;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+

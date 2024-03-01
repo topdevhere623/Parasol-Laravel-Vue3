@@ -1,0 +1,104 @@
+{
+    "name": "advplus/backend",
+    "type": "project",
+    "description": "Advantage Plus",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-exif": "*",
+        "ext-imagick": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "checkout/checkout-sdk-php": "^1.0",
+        "clegginabox/pdf-merger": "dev-master",
+        "doctrine/dbal": "^3.1",
+        "dompdf/dompdf": "^2.0",
+        "donatj/phpuseragentparser": "^1.6",
+        "fakerphp/faker": "^1.9.1",
+        "firebase/php-jwt": "^6.4",
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "genealabs/laravel-pivot-events": "*",
+        "guzzlehttp/guzzle": "^7.2",
+        "htmlmin/htmlmin": "^9.0",
+        "intervention/image": "^2.5",
+        "itsgoingd/clockwork": "^5.0",
+        "laravel-notification-channels/telegram": "^2.0.0",
+        "laravel/framework": "^9.11",
+        "laravel/passport": "^10.0",
+        "laravel/tinker": "^2.0",
+        "league/csv": "^9.8",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "nunomaduro/larastan": "^2.0",
+        "parasol-software/parasol-crm": "*@dev",
+        "parasol-software/parasol-crm-v2": "*@dev",
+        "phpunit/phpunit": "^9.5.10",
+        "predis/predis": "^1.1",
+        "santigarcor/laratrust": "^7.1.0",
+        "sentry/sentry-laravel": "^3.17",
+        "staudenmeir/eloquent-has-many-deep": "^1.7"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.8",
+        "spatie/laravel-ignition": "^1.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/",
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "app/Helpers/helpers.php",
+            "app/Helpers/CloudflareProxyIp.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "if [ $COMPOSER_DEV_MODE -eq 1 ]; then php artisan ide-helper:generate; fi",
+            "if [ $COMPOSER_DEV_MODE -eq 1 ]; then php artisan ide-helper:meta; fi"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./parasolcrm"
+        },
+        {
+            "type": "path",
+            "url": "./parasolcrm-v2"
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+.payment-methods {
+  .amazon-payfort {
+    display: block;
+    border-radius: 30px;
+    padding: 30px 40px 15px;
+    background-color: #1c75b6;
+    color: white;
+    position: relative;
+    max-width: 430px;
+
+    h3 {
+      font-size: 20px;
+      text-transform: uppercase;
+      color: #66cdd9;
+      display: flex;
+      align-items: center;
+      margin-top: 0;
+      margin-bottom: 30px;
+
+      img {
+        margin-right: 15px;
+      }
+
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    p strong {
+      font-size: 15px;
+    }
+
+    img {
+      &.download {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+      }
+    }
+  }
+
+  #amazon_block__iframe {
+    border: 0;
+    height: 530px !important;
+    width: 100% !important;
+  }
+
+  .frame--activated {
+    opacity: 1;
+    border: solid 1px #13395E;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0 rgba(19, 57, 94, 0.2);
+  }
+
+  .frame--activated.frame--focus {
+    border: solid 1px #13395E;
+    box-shadow: 0 2px 5px 0 rgba(19, 57, 94, 0.15);
+  }
+
+  .frame--activated.frame--invalid {
+    border: solid 1px #D96830;
+    box-shadow: 0 2px 5px 0 rgba(217, 104, 48, 0.15);
+  }
+}

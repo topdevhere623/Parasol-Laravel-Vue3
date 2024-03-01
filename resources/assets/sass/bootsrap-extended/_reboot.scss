@@ -1,0 +1,18 @@
+:root {
+  scroll-behavior: auto !important;
+}
+
+body {
+  font-size: 16px;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

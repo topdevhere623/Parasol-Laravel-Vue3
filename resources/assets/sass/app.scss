@@ -1,0 +1,44 @@
+@import 'variables';
+
+@import 'bootsrap-extended/bootstrap-extended';
+@import 'plugins/plugins';
+
+@import 'components/home/home';
+@import 'components/blog/blog';
+@import 'components/club/club';
+@import 'components/clubs-request-block';
+@import 'components/booking/booking';
+@import 'components/newsletter-modal';
+@import 'components/page-header';
+@import 'components/page';
+@import 'components/faq';
+@import 'components/tabby';
+@import 'components/modal';
+@import 'components/entertainer';
+@import 'components/links';
+@import 'components/how-it-work';
+
+// layout
+@import 'layout/header';
+@import 'layout/footer';
+
+// remove the gap on the right in the mobile version
+@include media-breakpoint-down(md) {
+  html {
+    overflow: scroll;
+  }
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+}
+
+.btn.btn-warning {
+  background-color: var(--warning-color, #FFA300) !important;
+  --bs-btn-hover-border-color: var(--warning-color, #FFA300) !important;
+}
+
+// Cuz of click on page creates new button (google tag manager)
+body > #SubmitForm {
+  display: none;
+}

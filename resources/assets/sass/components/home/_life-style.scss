@@ -1,0 +1,55 @@
+.lifestyle {
+  background-color: $white;
+  box-shadow: 0 30px 90px rgba(0, 48, 102, 0.1);
+  border-radius: 30px;
+  width: 100%;
+  margin-bottom: 70px;
+  margin-top: 0px;
+  position: relative;
+  z-index: 4;
+  overflow: hidden;
+
+  &__our-partners {
+    padding: 20px;
+    border-bottom: 1px solid #E0E5EB;
+    margin-bottom: 40px;
+    position: relative;
+
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .swiper-slide img {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  }
+
+  &__benefits {
+    padding: 0 30px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    &__item {
+      width: 33.3%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 15px;
+    }
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+
+      &__item {
+        width: 100%;
+      }
+    }
+
+  }
+}

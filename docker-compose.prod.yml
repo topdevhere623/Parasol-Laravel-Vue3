@@ -1,0 +1,209 @@
+version: "3.8"
+
+x-app-environment: &app-environment
+
+  APP_KEY: base64:igB+PMVUg+Xqcf4SkFobx/vkHMGmSZjCNmB1/9Nrujg=
+  APP_URL: https://$HOST_NAME
+  MEMBER_PORTAL_URL: https://member.$HOST_NAME
+  BACKOFFICE_URL: https://admin.$HOST_NAME
+  CRM_URL: https://crm.$HOST_NAME
+
+  DB_HOST: $DB_HOST
+  DB_PORT: 3306
+  DB_DATABASE: $DB_DATABASE
+  DB_USERNAME: $DB_USERNAME
+  DB_PASSWORD: $DB_PASSWORD
+
+  MAIL_HOST: $MAIL_HOST
+  MAIL_USERNAME: $MAIL_USERNAME
+  MAIL_PASSWORD: $MAIL_PASSWORD
+  MAIL_ENCRYPTION: tls
+  MAIL_PORT: 587
+
+  APP_ENV: production
+  APP_DEBUG: 0
+
+  FILESYSTEM_DISK: s3
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_DEFAULT_REGION: eu-central-1
+  AWS_BUCKET: advplus-uploads
+  NGINX_UPLOADS_PROXY_HOST: advplus-uploads.s3.eu-central-1.amazonaws.com
+
+  CHECKOUT_PUBLIC_KEY: $CHECKOUT_PUBLIC_KEY
+  CHECKOUT_SECRET_KEY: $CHECKOUT_SECRET_KEY
+
+  TABBY_PUBLIC_KEY: $TABBY_PUBLIC_KEY
+  TABBY_SECRET_KEY: $TABBY_SECRET_KEY
+  TABBY_CHECK_PENDING_PAYMENTS: 1
+
+  SENTRY_LARAVEL_DSN: $SENTRY_LARAVEL_DSN
+  SENTRY_WEBSITE_DSN: $SENTRY_WEBSITE_DSN
+  SENTRY_RELEASE_VERSION: $SENTRY_RELEASE_VERSION
+
+  PASSKIT_KEY: $PASSKIT_KEY
+  PASSKIT_SECRET: $PASSKIT_SECRET
+  PASSKIT_MEMBER_EMAIL_REPLACE: memberships@advplus.ae
+  PASSKIT_WEBHOOK_TOKEN: $PASSKIT_WEBHOOK_TOKEN
+
+  MERIT_SECRET_KEY: $MERIT_SECRET_KEY
+  MERIT_STORE_ID: $MERIT_STORE_ID
+  MERIT_URL: https://giftapi.shopmygiftcards.com
+
+  PASSPORT_PRIVATE_KEY: $PASSPORT_PRIVATE_KEY
+  PASSPORT_PUBLIC_KEY: $PASSPORT_PUBLIC_KEY
+
+  TELEGRAM_DEFAULT_BOT_TOKEN: $TELEGRAM_DEFAULT_BOT_TOKEN
+  TELEGRAM_BOOKING_CHAT_ID: $TELEGRAM_BOOKING_CHAT_ID
+
+  REDIS_HOST: redis
+  CACHE_DRIVER: redis
+  SESSION_DRIVER: redis
+
+  AMAZON_PAYFORT_MERCHANT_IDENTIFIER: $AMAZON_PAYFORT_MERCHANT_IDENTIFIER
+  AMAZON_PAYFORT_ACCESS_CODE: $AMAZON_PAYFORT_ACCESS_CODE
+  AMAZON_PAYFORT_SHA_REQUEST_PHRASE: $AMAZON_PAYFORT_SHA_REQUEST_PHRASE
+  AMAZON_PAYFORT_SHA_RESPONSE_PHRASE: $AMAZON_PAYFORT_SHA_RESPONSE_PHRASE
+
+  GEMS_LOGIN: $GEMS_LOGIN
+  GEMS_PASSWORD: $GEMS_PASSWORD
+
+  NOCRM_SUBDOMAIN: adv
+  NOCRM_API_KEY: $NOCRM_API_KEY
+
+  PLECTO_USERNAME: $PLECTO_USERNAME
+  PLECTO_PASSWORD: $PLECTO_PASSWORD
+
+  ZAPIER_LEADS_WEBHOOK_TOKEN: $ZAPIER_LEADS_WEBHOOK_TOKEN
+  UNBOUNCE_LEADS_WEBHOOK_TOKEN: $UNBOUNCE_LEADS_WEBHOOK_TOKEN
+  FACEBOOK_LEADS_WEBHOOK_TOKEN: $FACEBOOK_LEADS_WEBHOOK_TOKEN
+
+  ZOHO_CLIENT_ID: $ZOHO_CLIENT_ID
+  ZOHO_CLIENT_SECRET: $ZOHO_CLIENT_SECRET
+
+  PAYTABS_SERVER_KEY: $PAYTABS_SERVER_KEY
+  PAYTABS_PROFILE_ID: $PAYTABS_PROFILE_ID
+
+  MAMO_API_KEY: $MAMO_API_KEY
+
+x-app-image: &app-image $APP_CONTAINER_IMAGE
+
+
+volumes:
+  nginx-uploads-cache: { }
+  app-logs: { }
+
+services:
+  app:
+    image: *app-image
+    environment:
+      <<: *app-environment
+    volumes:
+      - nginx-uploads-cache:/var/cache/nginx/s3-cache
+      - app-logs:/app/storage/logs
+    deploy:
+      replicas: 2
+      placement:
+        max_replicas_per_node: 4
+        constraints:
+          - node.role==worker
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 20s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 512M
+      labels:
+        - autoheal=true
+        - traefik.enable=true
+        - traefik.http.routers.$APP_CONTAINER_NAME.entrypoints=websecure
+        - traefik.http.routers.$APP_CONTAINER_NAME.rule=Host(`$HOST_NAME`, `www.$HOST_NAME`, `entertainer.$HOST_NAME`)
+        - traefik.http.routers.$APP_CONTAINER_NAME.tls=true
+        - traefik.http.routers.$APP_CONTAINER_NAME.tls.certresolver=letsEncrypt
+        - traefik.http.routers.$APP_CONTAINER_NAME.middlewares=cloudflare-chain@file
+        - traefik.http.services.$APP_CONTAINER_NAME.loadbalancer.server.port=80
+    networks:
+      - traefik-public
+      - redis
+  queue:
+    image: *app-image
+    environment:
+      <<: *app-environment
+    volumes:
+      - app-logs:/app/storage/logs
+    deploy:
+      replicas: 2
+      placement:
+        max_replicas_per_node: 4
+        constraints:
+          - node.role==worker
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 20s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - redis
+
+  scheduler:
+    image: *app-image
+    environment:
+      <<: *app-environment
+    volumes:
+      - app-logs:/app/storage/logs
+    deploy:
+      replicas: 1
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - node.role==worker
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 20s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - redis
+networks:
+  default:
+    name: $APP_CONTAINER_NAME
+  traefik-public:
+    name: "traefik-public"
+    external: true
+  redis:
+    name: "redis"
+    external: true

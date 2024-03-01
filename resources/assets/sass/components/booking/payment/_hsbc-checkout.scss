@@ -1,0 +1,13 @@
+.payment-methods {
+  .checkout-com.hsbc_checkout {
+    .visa-card {
+      background: linear-gradient(90deg, #1daca1 15.62%, #109c91 100%);
+
+      .visa-input {
+        label {
+          color: $white;
+        }
+      }
+    }
+  }
+}

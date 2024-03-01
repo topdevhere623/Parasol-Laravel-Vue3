@@ -1,0 +1,36 @@
+.newsletter-modal-message {
+  form {
+    max-width: 400px !important;
+    border-radius: 30px;
+
+    button {
+      margin-top: 0 !important;
+    }
+
+    span {
+      margin-top: 16px !important;
+    }
+  }
+
+  .form-group {
+    width: 310px;
+  }
+
+  .modal-message__close {
+    top: -22px;
+    right: -30px;
+
+    svg {
+      width: 24px;
+      stroke: white;
+      stroke-width: 2.4px;
+      stroke-linejoin: bevel;
+      stroke-linecap: round;
+    }
+  }
+
+  img {
+    top: 0;
+    left: -92px;
+  }
+}

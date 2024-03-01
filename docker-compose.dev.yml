@@ -1,0 +1,119 @@
+version: "3.8"
+
+x-app-build: &app-build
+  context: ./
+  dockerfile: docker/dev/.dockerfile
+
+
+services:
+  app:
+    container_name: "advplus-app"
+    image: advplus-app-local
+    build:
+      <<: *app-build
+    volumes:
+      - ./:/app
+      - ./docker/dev/docker-xdebug.ini:/usr/local/etc/php/conf.d/docker-xdebug.ini
+      - ./storage/xdebug-output:/tmp
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    #      - ./docker/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+    ports:
+      - "8100:80"
+    networks:
+      - advplus-dev-network
+    depends_on:
+      - mariadb
+      - mailhog
+      - redis
+      - mix
+    environment:
+      NGINX_UPLOADS_PROXY_HOST: advplus.ae
+      PHP_IDE_CONFIG: "serverName=advplus-local"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+  queue:
+    container_name: "advplus-app-queue"
+    image: advplus-app-local
+    entrypoint: sh -c "php artisan queue:listen --memory=512 --sleep=1 --queue=high,default,low"
+    volumes:
+      - ./:/app
+    depends_on:
+      - mariadb
+    networks:
+      - advplus-dev-network
+  scheduler:
+    container_name: "advplus-app-scheduler"
+    image: advplus-app-local
+    volumes:
+      - ./:/app
+    depends_on:
+      - mariadb
+    networks:
+      - advplus-dev-network
+
+  mariadb:
+    image: mariadb:10.5.8
+    container_name: "advplus-mariadb"
+    restart: unless-stopped
+    volumes:
+      - ./data/database:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: advplus
+      MYSQL_USER: advplus
+      MYSQL_PASSWORD: ONfl7Ek7sW
+      MYSQL_ROOT_PASSWORD: ONfl7Ek7sW
+      TZ: Asia/Dubai
+    ports:
+      - "8110:3306"
+    networks:
+      - advplus-dev-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "advplus-mailhog"
+    ports:
+      - "8111:8025"
+    restart: on-failure
+    networks:
+      - advplus-dev-network
+  composer:
+    image: composer/composer:2
+    working_dir: /app
+    volumes:
+      - .:/app
+  npm:
+    image: node:14.19-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+  redis:
+    image: redis:6.2-alpine
+    container_name: "advplus-redis"
+    restart: unless-stopped
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
+    networks:
+      - advplus-dev-network
+  mix:
+    container_name: advplus-website-mix
+    build:
+      context: .
+      dockerfile: docker/dev/laravel-mix/.dockerfile
+    command: npm run hot
+    stdin_open: true
+    tty: true
+    ports:
+      - "8103:8103"
+    volumes:
+      - ./public:/app/public
+      - ./resources:/app/resources
+      - ./webpack.mix.js:/app/webpack.mix.js
+      - ./storage:/app/storage
+
+networks:
+  advplus-dev-network:
+    name: "advplus-dev-network"

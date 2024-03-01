@@ -1,0 +1,51 @@
+.membership {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 40px;
+
+
+  &__item {
+
+    &__img {
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+
+
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block;
+      }
+
+      a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:before {
+          content: '';
+          display: block;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background-color: rgba(0, 0, 0, 0.5);
+          background-repeat: no-repeat;
+          background-position: center;
+          background-image: url(/assets/images/play.svg);
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+          }
+        }
+      }
+    }
+  }
+}

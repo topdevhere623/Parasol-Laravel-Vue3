@@ -1,0 +1,56 @@
+.slogan {
+  height: 800px;
+  width: 100%;
+  position: relative;
+  background: var(--slogan-background-image, url(/assets/images/banner.jpg)) no-repeat 50%;
+  background-size: cover;
+  padding-top: 170px;
+  top: -96px;
+  color: white;
+  font-weight: bold;
+
+  @include media-breakpoint-down(md) {
+    background: var(--slogan-background-image-mobile, url(/assets/images/banner-mobile.jpg)) no-repeat 50%;
+    height: auto;
+  }
+
+  .overlay-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.5) 43%, rgba(0, 0, 0, 0) 80%);
+  }
+
+  & > div {
+    z-index: 4;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 48px;
+    line-height: 1.4;
+    max-width: 400px;
+
+    @include media-breakpoint-down(md) {
+      font-size: 27px !important;
+    }
+  }
+
+  a.btn {
+    max-width: 200px;
+    width: 100%;
+    height: 57px;
+    @include media-breakpoint-down(md) {
+      max-width: none;
+    }
+  }
+
+  p {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+}

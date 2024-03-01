@@ -1,0 +1,31 @@
+{
+    "name": "parasol-software/parasol-crm-v2",
+    "description": "Parasol CRM V2",
+    "keywords": [
+        "laravel",
+        "parasol crm"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "kirschbaum-development/eloquent-power-joins": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "ParasolCRMV2\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ParasolCRMV2\\Services\\CRM\\PrslServiceProvider",
+                "ParasolCRMV2\\Activities\\ActivityServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

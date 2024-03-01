@@ -1,0 +1,27 @@
+.blog {
+  .arrow-btn {
+    position: absolute;
+    z-index: 100;
+    right: 17px;
+    top: 17px;
+    width: 53px !important;
+    height: 53px !important;
+    padding-top: 4px;
+    padding-right: 4px;
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    img {
+      position: static;
+      width: 72px !important;
+      height: 72px !important;
+      max-width: 72px !important;
+      max-height: 72px !important;
+      min-width: auto !important;
+      min-height: auto !important;
+      margin-left: 0 !important;
+    }
+  }
+}

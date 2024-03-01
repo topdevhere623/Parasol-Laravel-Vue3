@@ -1,0 +1,32 @@
+.become-member {
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    right: 50px;
+    margin-top: -14px;
+    height: 17px;
+    background-color: #21ABBA;
+  }
+
+  &__img {
+    width: 33.3%;
+    z-index: 3;
+  }
+
+  @include media-breakpoint-down(md) {
+    &:before {
+      left: 50%;
+      top: 50px;
+      bottom: 50px;
+      margin-left: -14px;
+      width: 17px;
+      height: 80%;
+    }
+
+    &__img {
+      width: 100%;
+    }
+  }
+}

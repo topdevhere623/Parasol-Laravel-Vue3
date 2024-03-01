@@ -1,0 +1,486 @@
+.entertainer {
+  background: #F5F7FA;
+
+  a.btn {
+    height: 43px;
+  }
+
+  .header-menu .navbar-nav a {
+    height: 42px !important;
+    @include media-breakpoint-down(md) {
+      height: 52px !important;
+    }
+  }
+
+  .slogan {
+
+    @include media-breakpoint-down(md) {
+      padding-top: 90px;
+      top: -50px;
+      height: auto;
+      background-image: var(--slogan-background-image-mobile, url(/assets/images/banner-mobile.jpg));
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    h1 {
+      font-size: 60px;
+      max-width: 500px;
+
+      @include media-breakpoint-down(md) {
+        font-size: 34px !important;
+        line-height: 50px;
+        max-width: 340px;
+      }
+    }
+
+    .container {
+      margin-top: 50px;
+
+      .row div div {
+        width: 300px;
+        line-height: 28px;
+        @media (min-width: 576px) {
+          line-height: 1.6;
+          width: 600px;
+        }
+      }
+    }
+
+    a.btn {
+      height: 57px;
+      margin-top: 0;
+      margin-bottom: 0;
+      @include media-breakpoint-down(md) {
+        height: 46px;
+        max-width: none;
+        margin-top: 63px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .our-partners-swiper {
+    height: 157px;
+    padding: 20px;
+    margin: -150px auto 0;
+    background-color: #FFF;
+    box-shadow: 0 30px 90px rgb(0 48 102 / 10%);
+    border-radius: 30px;
+    position: relative;
+    z-index: 4;
+    overflow: hidden;
+    margin-bottom: 32px;
+    width: 110%;
+    margin-left: -5%;
+
+    @media (min-width: 576px) {
+      width: auto;
+      margin-left: 0;
+      margin-bottom: 0;
+      max-width: 540px;
+    }
+    @media (min-width: 768px) {
+      max-width: 720px;
+    }
+    @media (min-width: 992px) {
+      max-width: 960px;
+    }
+    @media (min-width: 1200px) {
+      max-width: 1170px;
+    }
+
+    &.lifestyle__our-partners {
+      border-bottom: none;
+    }
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 27px;
+    text-transform: uppercase;
+
+    .script {
+      font-size: 40px;
+    }
+  }
+
+  .container {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .reasons {
+    margin-top: 0;
+    margin-bottom: 24px;
+    @media (min-width: 576px) {
+      margin-top: 72px;
+      margin-bottom: 72px;
+    }
+
+    img {
+      border-radius: 15px;
+      margin-bottom: 8px;
+      width: 320px;
+      @media (min-width: 576px) {
+        width: 370px;
+      }
+    }
+
+    h2 {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 22px;
+      @media (min-width: 576px) {
+        font-size: 24px;
+      }
+    }
+
+    p {
+      margin: 0 auto;
+      text-align: center;
+      font-size: 16px;
+      width: 320px;
+      @media (min-width: 576px) {
+        width: 230px;
+      }
+    }
+  }
+
+  .reasons-list {
+    flex-direction: column !important;
+    @media (min-width: 576px) {
+      flex-direction: row !important;
+    }
+
+    div {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+    }
+
+    img {
+      width: 370px;
+      height: 240px;
+      @include media-breakpoint-down(md) {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .reasons-list,
+  .lazy-clubs-list {
+    padding-top: 20px;
+    @media (min-width: 576px) {
+      padding-top: 40px;
+    }
+    gap: 30px;
+  }
+
+  .join-today-block {
+    background: linear-gradient(270.68deg, #40D8EA 0%, #1CA4B7 100%);
+    height: 172px;
+    gap: 17px;
+    border-radius: 0;
+    flex-direction: column !important;
+    padding: 20px 48px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    @media (min-width: 576px) {
+      height: 105px;
+      gap: 44px;
+      border-radius: 30px;
+      flex-direction: row !important;
+      padding: 0;
+    }
+    @include media-breakpoint-down(sm) {
+      background: linear-gradient(270.68deg, #33C4D6 0%, #29B8CA 100%);
+      font-size: 22px;
+    }
+
+    div {
+      line-height: 30px;
+      text-align: center;
+      @media (min-width: 576px) {
+        text-align: left;
+      }
+    }
+
+    a {
+      height: 57px;
+      margin-top: 1rem;
+      @include media-breakpoint-down(md) {
+        margin-top: 0 !important;
+        width: 80% !important;
+        padding: 15px !important;
+      }
+    }
+  }
+
+  .small {
+    display: block;
+    @media (min-width: 576px) {
+      display: none;
+    }
+  }
+
+  .large {
+    display: none;
+    @media (min-width: 576px) {
+      display: block;
+    }
+  }
+
+  .clubs {
+    margin-top: 96px !important;
+    margin-bottom: 92px !important;
+    @include media-breakpoint-down(md) {
+      margin-top: 48px !important;
+      margin-bottom: 0 !important;
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+
+    h2 {
+      margin-bottom: 0 !important;
+    }
+
+    .small {
+      margin-bottom: 48px !important;
+
+      .lazy-clubs-list {
+        flex-direction: column;
+
+        &__item {
+          width: 100%;
+          border-radius: 10px;
+          margin-bottom: 10px;
+          padding: 0;
+          background-color: #FFF;
+
+          .club_photo {
+            height: 135px;
+            width: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            background-size: cover;
+            border-radius: 10px 10px 0 0;
+          }
+
+          & > .head {
+            min-height: inherit;
+            padding: 8px 50px 8px 22px;
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            .mobile-logo {
+              min-width: 65px;
+              min-height: 65px;
+              width: 65px;
+              height: 65px;
+              display: block;
+              margin-right: 22px;
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: contain;
+              position: relative;
+
+              &:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -11px;
+                width: 1px;
+                height: 100%;
+                background-color: #DBF1F3;
+              }
+            }
+          }
+
+          & > .club-content {
+            display: none !important;
+            border-top: 2px solid #F5F7FA;
+            padding-top: 20px;
+
+            &.open {
+              display: block !important;
+            }
+
+            .mob_hsbc-clubs-list {
+              padding-left: 15px;
+              padding-right: 15px;
+
+              a {
+                color: #1E262E;
+                font-size: 15px;
+                text-decoration: none;
+              }
+            }
+
+            .desc {
+              padding: 15px 20px;
+            }
+
+            .mob_club_content {
+              padding: 0 15px;
+
+              a {
+                color: #1E262E;
+                font-size: 15px;
+                text-decoration: none;
+              }
+            }
+          }
+
+          .acc-tgg-button {
+            width: 45px;
+            height: 30px;
+            top: 50%;
+            margin-top: -8px;
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: white;
+            letter-spacing: 0.3px;
+            padding-right: 22px;
+
+            svg {
+              position: absolute;
+              right: 10px;
+              fill: #C4C4C4;
+              top: 1px;
+              width: 13px;
+              height: 13px;
+            }
+
+            &.collapsed svg {
+              transform: rotate(180deg);
+            }
+          }
+
+          .title {
+            font-size: 16px !important;
+            font-weight: 400 !important;
+            padding-top: 0;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+          }
+        }
+
+        .load-btn {
+          display: block;
+          color: var(--warning-color, #F98A75);
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          text-decoration: none;
+          text-align: center;
+          margin-top: 27px;
+        }
+
+        .load-less {
+          display: none;
+        }
+      }
+
+      a {
+        height: 54px;
+
+        &.btn {
+          background-color: var(--warning-color, #F98A75);
+        }
+      }
+    }
+
+    .large {
+      @include media-breakpoint-down(md) {
+        margin-bottom: 74px !important;
+      }
+    }
+
+    &-request-block {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .packages {
+    margin-top: 92px !important;
+    margin-bottom: 36px !important;
+
+    @include media-breakpoint-down(sm) {
+      margin-top: 48px !important;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .testimonials {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+    @include media-breakpoint-down(md) {
+      margin-top: 48px !important;
+      margin-bottom: 48px !important;
+    }
+  }
+
+  .become-member:before {
+    background: none;
+  }
+
+  .footer {
+    padding-left: 29px;
+    padding-right: 29px;
+
+    &__copy {
+      border-top: none;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-top: 50px !important;
+      margin-bottom: 20px !important;
+      font-size: 18px !important;
+      font-weight: 390;
+      @include media-breakpoint-down(sm) {
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  .text-blue {
+    color: #21ABBA !important;
+  }
+
+  .text-middle-grey {
+    color: #8B9198;
+  }
+
+  .fs-middle {
+    font-size: 22px;
+  }
+
+  .font-mr {
+    font-weight: normal;
+  }
+
+  .payments {
+    @include media-breakpoint-down(md) {
+      align-items: center;
+      margin-top: 40px;
+    }
+  }
+}
+

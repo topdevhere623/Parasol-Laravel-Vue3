@@ -1,0 +1,59 @@
+/* Instagram */
+.instagram-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 70px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.instagram-head .title {
+  font-weight: bold;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: $gray-700;
+  display: flex;
+  align-items: center;
+}
+
+.sbi_follow_btn {
+  background: #408bd1;
+  color: #fff;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.sbi_follow_btn:hover {
+  background-color: #349dff;
+  color: #fff;
+}
+
+.sbi_follow_btn svg:not(:root).svg-inline--fa {
+  height: 1em;
+  font-size: 15px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.instagram-feed {
+  margin-bottom: 40px;
+}
+
+.instagram-feed .swiper-slide {
+  display: block;
+  height: 288px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.instagram-feed .swiper-slide img {
+  max-width: 100% !important;
+  height: 288px !important;
+  border-radius: 15px;
+  object-fit: cover;
+}

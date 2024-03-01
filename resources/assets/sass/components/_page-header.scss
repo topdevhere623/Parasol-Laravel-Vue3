@@ -1,0 +1,47 @@
+.page-header {
+  padding-top: 50px;
+  padding-bottom: 30px;
+
+  h1 {
+    font-size: 34px;
+  }
+
+  .breadcrumbs {
+    display: inline-table;
+    width: 100%;
+    padding: 0;
+    list-style: none;
+
+    & > li {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 16px;
+      color: #8b8b8b;
+      margin-right: 10px;
+
+      a {
+        color: #21ABBA;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        &:after {
+          content: '';
+          margin-left: 10px;
+          width: 10px;
+          height: 10px;
+          display: block;
+          background-repeat: no-repeat;
+          background-position: 0 0;
+          background-image: url(/assets/images/breadcrumb.svg);
+          background-size: 10px 10px;
+        }
+      }
+    }
+  }
+}

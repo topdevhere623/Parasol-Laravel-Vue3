@@ -1,0 +1,61 @@
+.blog {
+  .pagination {
+
+    margin-top: 40px;
+    margin-bottom: 100px;
+    display: flex;
+    @include list-unstyled();
+
+    @include media-breakpoint-up(md) {
+      margin-top: 58px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin-top: 66px;
+      margin-bottom: 134px;
+      font-size: 21px;
+    }
+
+    .page-item {
+      background: transparent;
+      color: #AFAFAF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.active {
+        .page-link {
+          width: 1.8em;
+          height: 1.8em;
+          border-radius: 50%;
+          background-color: #00B8DD;
+          color: #FFF;
+          margin: 0.05em 0 0;
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+
+      .page-link {
+        background: transparent;
+        border: none;
+        color: #AFAFAF;
+        padding: 3px 8px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 2px;
+
+        @include media-breakpoint-down(sm) {
+          font-size: 21px;
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}

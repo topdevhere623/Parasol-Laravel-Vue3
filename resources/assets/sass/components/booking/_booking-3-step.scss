@@ -1,0 +1,63 @@
+.third-step {
+  .file-uploader {
+    width: 160px;
+    height: 160px;
+    background: url(/assets/images/uploader_bg.png) no-repeat center;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #61CDDA;
+
+    @include media-breakpoint-down(md) {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  .file-uploader-preview {
+    width: 160px;
+    height: 160px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 10px;
+
+    @include media-breakpoint-down(md) {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  .kids-counter {
+    background: #FFFFFF;
+    border: 3px solid rgba(0, 111, 187, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 17px;
+    border-radius: 50%;
+  }
+}
+
+@media (min-width: 768px) {
+  #bookingStepThreeForm {
+    padding-left: 70px;
+  }
+}
+
+@media (min-width: 821px) {
+  #bookingStepThreeForm {
+    padding-left: 160px;
+  }
+}

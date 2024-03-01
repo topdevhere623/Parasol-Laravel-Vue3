@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: "advplus-app"
+    restart: unless-stopped
+    environment: &app-environment
+      FPM_USER: ${FPM_USER:-1000}
+      FPM_GROUP: ${FPM_GROUP:-1000}
+      TZ: Asia/Dubai
+    healthcheck:
+      test: [ "CMD", "nginx", "-t" ]
+      start_period: 1s
+
+  queue:
+    container_name: "advplus-app-queue"
+    restart: unless-stopped
+    environment:
+      <<: *app-environment
+      ROLE: queue
+    command: queue
+
+  scheduler:
+    container_name: "advplus-app-scheduler"
+    restart: unless-stopped
+    environment:
+      <<: *app-environment
+    command: schedule

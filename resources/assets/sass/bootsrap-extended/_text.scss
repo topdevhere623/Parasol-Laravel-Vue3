@@ -1,0 +1,45 @@
+.text-blue {
+  color: #005fcc !important;
+}
+
+.text-darkred {
+  color: darkred;
+}
+
+.text-black {
+  color: $black !important;
+}
+
+.text-transform-none {
+  text-transform: none !important;
+}
+
+.link-arrow {
+  color: #FFA300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+
+  &:hover {
+    color: #FFA300;
+    text-decoration: underline;
+  }
+
+  &:after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    margin-left: 10px;
+    margin-top: -2px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(/assets/images/link-arrow.svg);
+  }
+
+  &.text-info {
+    &:after {
+      background-image: url(/assets/images/link-arrow-blue.svg);
+    }
+  }
+}

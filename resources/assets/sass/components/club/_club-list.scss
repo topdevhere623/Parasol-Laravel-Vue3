@@ -1,0 +1,105 @@
+.page-header.page-header-clubs-list {
+  position: relative;
+  background: var(--slogan-background-image, url(/assets/images/banner.jpg)) no-repeat top;
+  background-size: cover;
+  padding-top: 120px;
+  padding-bottom: 50px;
+  margin-top: -100px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .container {
+    position: relative;
+    z-index: 3;
+  }
+
+  .breadcrumbs > li a:after {
+    background-image: url(/assets/images/breadcrumb-white.svg) !important;
+  }
+}
+
+.club-filter {
+
+  @include media-breakpoint-up(md) {
+    .city-filter {
+      margin-left: calc(var(--bs-gutter-x) * -0.5);
+    }
+  }
+
+  .filter-select {
+    border: none;
+    background-color: transparent;
+    padding: 5px 20px;
+    color: #1E262E;
+    margin: 0;
+  }
+
+  .filter-btn {
+    border: none;
+    background-color: transparent;
+    padding: 5px 20px;
+    color: #1E262E;
+    margin: 0;
+    outline: none !important;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+
+
+    &.active {
+      background-color: var(--club-filter-city-color, #21ABBA) !important;
+      color: $white !important;
+
+      span {
+        color: #aadce1;
+      }
+    }
+
+    &:hover {
+      background-color: var(--club-filter-city-color-hover, #e1f5f7);
+    }
+
+    span {
+      color: #8B9198;
+      display: inline-block;
+      margin-left: 4px;
+    }
+  }
+
+  &.sm {
+    .filter-btn {
+      font-size: 14px;
+      padding: 3px 17px;
+
+      span {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .form-select-wrap {
+    select {
+      border-radius: 20px;
+      padding: 6px 14px;
+      border: none;
+    }
+
+    &::after {
+      color: #8B9198;
+    }
+  }
+}
+
+.tag-filter select {
+  color: #8B9198;
+}

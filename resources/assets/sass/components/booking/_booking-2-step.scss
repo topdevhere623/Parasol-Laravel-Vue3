@@ -1,0 +1,165 @@
+@import "payment/checkout";
+@import "payment/hsbc-checkout";
+@import "payment/monthly-description";
+@import "payment/amazon-payfort";
+@import "payment/tabby";
+@import "payment/bank-transfer";
+
+.second-step {
+  .invoice {
+    background: var(--light-background, #DBF1F3);
+    border: 10px solid var(--light-background, #DBF1F3);;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 60px;
+
+    @include media-breakpoint-down(md) {
+      border: 0;
+    }
+
+    &__header {
+      background: rgba(255, 255, 255, .8);
+      padding: 15px 0;
+
+      h6 {
+        font-weight: bold;
+        font-size: 18px;
+        color: var(--headers-color-second, #37B1BF);
+        margin: 0;
+      }
+    }
+
+    &__item {
+      background-color: $white;
+      padding-top: 15px;
+      padding-bottom: 15px;
+
+      &:nth-last-child(2) {
+        @include media-breakpoint-up(lg) {
+          border-bottom-left-radius: 30px;
+          border-bottom-right-radius: 30px;
+          margin: 0;
+        }
+      }
+    }
+
+    &__subtotal {
+      background: rgba(255, 255, 255, .8);
+    }
+
+    &__total {
+      color: var(--total-price-color, #109c91);
+
+      & > .fs-5 {
+        @include media-breakpoint-down(md) {
+          font-size: 18px !important;;
+        }
+      }
+
+      & > .fs-2 {
+        @include media-breakpoint-down(md) {
+          font-size: 20px !important;
+        }
+      }
+    }
+  }
+
+  .payment-methods {
+    &__select {
+      label {
+        background-color: #FFFFFF;
+        background-image: url(/assets/images/kvicon.png);
+        background-repeat: no-repeat;
+        background-position: 98% center;
+        border-radius: 5px;
+        margin: 2px 0 4px;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        font-style: normal;
+        font-weight: 390;
+        font-size: 16px;
+        line-height: 25px;
+        color: #8E8E8E;
+        cursor: pointer;
+        max-width: 430px;
+        box-shadow: 0 0 0 1px #E3E3E3;
+      }
+
+      input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      img {
+        margin-right: 10px;
+      }
+
+      label:hover,
+      & input:checked + label {
+        box-shadow: 0 0 0 3px var(--checkbox-bg, #61CDDA);
+      }
+    }
+
+    &__loading {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .terms-and-conditions {
+    display: flex;
+    justify-content: center;
+
+    label {
+      display: flex;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 25px;
+      color: $black;
+      position: relative;
+      cursor: pointer;
+      margin-bottom: 35px;
+
+      @include media-breakpoint-down(md) {
+        flex-wrap: wrap;
+        padding-left: 30px;
+        font-size: 14px;
+      }
+
+      &::before {
+        content: '';
+        position: relative;
+        margin-right: 10px;
+        border: 2px solid #E3E3E3;
+        border-radius: 5px;
+        height: 24px;
+        width: 24px;
+
+        @include media-breakpoint-down(md) {
+          position: absolute;
+          left: 0;
+        }
+      }
+
+      a {
+        color: #006FBB;
+        margin-right: 5px;
+        margin-left: 5px;
+      }
+    }
+
+    input {
+      opacity: 0;
+      width: 1px;
+      margin-top: 5px;
+      height: 100%;
+    }
+
+    input:checked + label::before {
+      border: 2px solid var(--checkbox-bg, #61CDDA);
+      background-size: cover;
+      background: var(--checkbox-bg, #61CDDA) url(/assets/images/check.svg) no-repeat center;
+    }
+  }
+}

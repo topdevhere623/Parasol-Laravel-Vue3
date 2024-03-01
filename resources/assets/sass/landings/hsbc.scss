@@ -1,0 +1,193 @@
+.hsbc-landing {
+  max-width: 570px;
+  margin: 0 auto;
+
+  .btn-member-portal {
+    position: absolute;
+    top: 25px;
+    right: 10px;
+    width: auto !important;
+    height: auto !important;
+    padding: 10px 15px;
+    background: #109c91 !important;
+  }
+
+  .slogan {
+    background-image: url(/assets/images/hsbc/bg_new.jpg) !important;
+
+    &__logo {
+      width: 165px;
+      height: 55px;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+  }
+
+  h2 {
+    font-size: 27px !important;
+  }
+
+  .text-hsbc {
+    color: #109c91 !important;
+  }
+
+  .lazy-clubs-list {
+
+    .load-btn {
+      display: block;
+      color: var(--warning-color, #2D2D2D);
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      text-align: center;
+      margin-top: 27px;
+    }
+
+    .load-less {
+      display: none;
+    }
+
+    &__item {
+      width: 100%;
+      background-color: #fff;
+      box-shadow: 0 2px 7px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 0;
+
+      & > .club-content {
+        display: none !important;
+        border-top: 2px solid #F5F7FA;
+        padding-top: 20px;
+
+        &.open {
+          display: block !important;
+        }
+
+        .mob_hsbc-clubs-list {
+          padding-left: 15px;
+          padding-right: 15px;
+
+          a {
+            color: #1E262E;
+            font-size: 15px;
+            text-decoration: none;
+          }
+        }
+
+        .desc {
+          padding: 15px 20px;
+        }
+
+        .mob_club_content {
+          padding: 0 15px;
+
+          a {
+            color: #1E262E;
+            font-size: 15px;
+            text-decoration: none;
+          }
+        }
+      }
+
+
+      & > .head {
+        min-height: inherit;
+        padding: 8px 50px 8px 22px;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        .mobile-logo {
+          min-width: 65px;
+          min-height: 65px;
+          width: 65px;
+          height: 65px;
+          display: block;
+          margin-right: 22px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          position: relative;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -11px;
+            width: 1px;
+            height: 100%;
+            background-color: #dbf1f3;
+          }
+        }
+      }
+
+      .club_photo {
+        height: 135px;
+        width: 100%;
+        display: block;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: cover;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .acc-tgg-button {
+        width: 45px;
+        height: 30px;
+        top: 50%;
+        margin-top: -8px;
+        position: absolute;
+        bottom: 5px;
+        right: 8px;
+        font-size: 10px;
+        text-transform: uppercase;
+        color: white;
+        letter-spacing: 0.3px;
+        padding-right: 22px;
+
+        svg {
+          position: absolute;
+          right: 10px;
+          fill: #C4C4C4;
+          top: 1px;
+          width: 13px;
+          height: 13px;
+        }
+
+        &.collapsed svg {
+          transform: rotate(180deg);
+        }
+      }
+
+      .title {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+        padding-top: 0;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .hsbc-footer {
+    background: #109c91;
+    padding: 40px 25px 25px;
+    margin-top: 50px;
+
+    a {
+      color: #fff;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.clubs-slider {
+  .btn {
+    min-width: 260px;
+    padding: 10px 20px;
+  }
+
+  .clubs-slider-swiper {
+    padding: 0 30px !important;
+
+    .swiper-slide img {
+      max-width: 100% !important;
+      height: auto !important;
+      border-radius: 15px;
+    }
+
+    .swiper-slide {
+      text-decoration: none !important;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      margin-top: -45px;
+
+      @include media-breakpoint-down(md) {
+        width: 50px;
+        height: 50px;
+        background-color: #fff;
+        border-radius: 50%;
+      }
+    }
+
+    .swiper-button-next:after, .swiper-button-prev:after {
+      font-size: 21px;
+    }
+
+    .swiper-button-next {
+      right: -8px;
+      left: auto;
+    }
+
+    .swiper-button-prev {
+      left: -8px;
+      right: auto;
+    }
+  }
+}

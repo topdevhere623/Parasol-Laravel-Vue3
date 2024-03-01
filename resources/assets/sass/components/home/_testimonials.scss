@@ -1,0 +1,30 @@
+.testimonials {
+
+  &__item {
+    padding: 30px;
+    border-radius: 30px;
+    background-color: #f7f9fb;
+    margin-bottom: 20px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+
+    & img {
+      object-fit: cover;
+    }
+
+    & p {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #525960;
+      margin: 15px 0 20px;
+    }
+
+    & h5 {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.3;
+      color: #1E262E;
+    }
+  }
+}

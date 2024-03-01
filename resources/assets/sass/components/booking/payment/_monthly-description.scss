@@ -1,0 +1,38 @@
+.monthly-payment-description {
+  & > div {
+    padding: 30px;
+    background-color: #006FBB;
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .info {
+    font-size: 15px;
+    padding-left: 30px;
+    background: url(/assets/images/warning.svg) no-repeat 0 4px;
+    background-size: 20px 20px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #66cdd9;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+
+  .orange {
+    margin-top: 15px;
+    color: #ffae00;
+    font-weight: 700;
+  }
+}

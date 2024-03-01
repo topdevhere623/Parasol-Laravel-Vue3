@@ -1,0 +1,53 @@
+.card-text {
+  font-family: "Brandon Grotesque", sans-serif;
+  font-style: normal;
+  font-weight: 450;
+  font-size: 1.7rem;
+  line-height: 2.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.whats-on-banner {
+  background: url(/assets/images/home_banner.jpg);
+  background-size: cover;
+  box-shadow: 0px 4px 12px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 25px;
+
+  &:hover {
+    box-shadow: 0px 10px 12px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    box-shadow: 0px 2px 12px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.banner-content {
+  z-index: 1;
+}
+
+.banner-overlay {
+  background: linear-gradient(155.98deg, #FFA300 27.07%, rgba(109, 109, 108, 0) 72.48%);
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.whatson-logo {
+  width: 200px;
+}
+
+@include media-breakpoint-down(sm) {
+  .whatson-col {
+    bottom: -70px;
+  }
+  .card-text {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+  }
+  .whatson-logo {
+    width: 100px;
+  }
+}

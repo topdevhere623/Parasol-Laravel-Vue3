@@ -1,0 +1,216 @@
+.blog {
+
+  .blog-container {
+
+    .header {
+
+      .bi.bi-arrow-down-up {
+        width: 23px;
+        height: 23px;
+        margin-right: 9px;
+        margin-top: -9px;
+        @include media-breakpoint-down(sm) {
+          height: 25px;
+          margin-top: 0;
+        }
+      }
+
+      summary {
+        cursor: pointer;
+        background: none;
+        list-style: none;
+
+        &:after {
+          display: inline-block;
+          content: '';
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #C9C9C9;
+          margin-left: 12px;
+          margin-bottom: 3px;
+        }
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      details {
+        position: relative;
+        width: 172px;
+        @include media-breakpoint-down(sm) {
+          width: 19px;
+          margin-right: 10px;
+        }
+
+        &[open] {
+          z-index: 5;
+
+          summary {
+            &:before {
+              content: '';
+              display: block;
+              width: 100vw;
+              height: 100vh;
+              background: transparent;
+              position: fixed;
+              top: 0;
+              left: 0;
+            }
+
+            &:after {
+              transform: rotate(180deg) translate(0%, 0%);
+            }
+          }
+        }
+      }
+
+      ul {
+        background: #FFF;
+        position: absolute;
+        top: calc(100% + .5rem);
+        left: 0;
+        padding: 23px 20px 31px 28px;
+        margin: 0;
+        box-sizing: border-box;
+        border-radius: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      li {
+        margin: 0;
+        padding: 9px 0;
+        border-bottom: 1px solid #ccc;
+        list-style: none;
+
+        &:first-child {
+          padding-top: 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+          border-bottom: none;
+        }
+      }
+
+      /* Fake select */
+
+      summary.radios {
+        counter-reset: radios;
+
+        @include media-breakpoint-down(sm) {
+          input, &:after {
+            display: none !important;
+          }
+        }
+
+        &:before {
+          content: var(--selection);
+        }
+
+        img {
+          width: 25px;
+          margin-top: -15px;
+          margin-right: 9px;
+          @include media-breakpoint-down(sm) {
+            width: 30px;
+            margin-top: 0;
+          }
+        }
+      }
+
+      input[type=radio] {
+        counter-increment: radios;
+        appearance: none;
+        display: none;
+
+        &:after {
+          content: attr(title);
+          display: inline;
+          font-size: 20px;
+        }
+
+        &:checked {
+          display: inline;
+          --display: block;
+        }
+      }
+
+      ul.list {
+        counter-reset: labels;
+        font-size: 20px;
+        box-shadow: 10px 20px 80px #00000029;
+      }
+
+      label {
+        width: 100%;
+        display: flex;
+        cursor: pointer;
+        justify-content: space-between;
+
+        span {
+          --display: none;
+          display: var(--display);
+          width: 1rem;
+          height: 1rem;
+          border: 1px solid #727272;
+          border-radius: 3px;
+        }
+      }
+
+      .search-box {
+        position: relative;
+        width: 432px;
+        @include media-breakpoint-down(sm) {
+          width: 84%;
+        }
+
+        input {
+          display: inline-block;
+          width: 100%;
+          height: 55px;
+          border: 0.5px solid #000000;
+          border-radius: 28px;
+          background: #FFF;
+          opacity: 0.4;
+          padding: 12px 36px 12px 24px;
+          font-size: 20px;
+
+          &::-webkit-input-placeholder,
+          &:-moz-placeholder,
+          &::-moz-placeholder {
+            font-size: 20px;
+          }
+
+          @include media-breakpoint-down(sm) {
+            height: 45px;
+            font-size: 16px;
+          }
+        }
+
+        .bi.bi-search {
+          cursor: pointer;
+          display: inline-block;
+          position: absolute;
+          top: 13px;
+          right: 18px;
+          width: 28px;
+          height: 28px;
+          @include media-breakpoint-down(sm) {
+            right: 12px;
+            top: 10px;
+            width: 23px;
+            height: 23px;
+          }
+        }
+      }
+    }
+  }
+}

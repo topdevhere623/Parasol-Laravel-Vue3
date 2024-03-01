@@ -1,0 +1,31 @@
+// Body
+$body-bg: #f5f7fa;
+
+// Typography
+$font-family-sans-serif: 'Brandon Grotesque', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$input-focus-box-shadow: true;
+$btn-focus-box-shadow: null !important;
+$disabled-border: none;
+
+$primary: #2a87a9;
+$warning: #ffa300;
+$info: #21abba;
+$blue: #006fbb;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1170px,
+);
+
+$border-widths: (
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px,
+  30: 30px
+);

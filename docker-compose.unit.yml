@@ -1,0 +1,51 @@
+version: "3.8"
+
+x-app-image: &app-image $APP_CONTAINER_IMAGE
+
+x-app-environment: &app-environment
+  APP_KEY: base64:D19qkHPDqpr+m+PX3UfQ1e8CrWlkK+4vXZzISiv7vzw=
+  APP_URL: http://localhost:80
+  DB_HOST: stage-database
+  DB_PORT: 3306
+  DB_DATABASE: $TEMP_DATABASE
+  DB_USERNAME: advplus
+  DB_PASSWORD: HrQjx22F
+  MAIL_HOST: mailhog
+  MAIL_PORT: 1025
+  MAIL_USERNAME: ""
+  MAIL_PASSWORD: ""
+  MAIL_ENCRYPTION: ""
+  LOG_CHANNEL: stack
+  TEST_PROGRAM_LOGIN: $ADV_PLUS_ADMIN_EMAIL
+  TEST_PROGRAM_PASSWORD: $ADV_PLUS_ADMIN_PASSWORD
+  APP_ENV: testing
+services:
+  app:
+    image: *app-image
+    container_name: "$APP_CONTAINER_NAME"
+    environment:
+      <<: *app-environment
+    depends_on:
+      - mailhog
+    volumes:
+      - ./storage/logs:/app/storage/logs
+    networks:
+      - stage-database
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "$APP_CONTAINER_NAME-unit-test-mailhog"
+    restart: on-failure
+  #TODO: избавиться от этого, каким-то образом
+  queue:
+    image: *app-image
+  #TODO: избавиться от этого, каким-то образом
+  scheduler:
+    image: *app-image
+
+networks:
+  default:
+    name: $APP_CONTAINER_NAME-unit-test
+  stage-database:
+    name: "stage-database"
+    external: true

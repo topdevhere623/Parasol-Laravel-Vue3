@@ -1,0 +1,21 @@
+.clubs-request-block {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(/assets/images/Image_adv_2.jpg);
+  text-align: center;
+  padding: 100px 20px;
+  @include media-breakpoint-down(sm) {
+    padding: 20px;
+  }
+  @include media-breakpoint-up(md) {
+    margin-top: 4rem !important;
+  }
+
+  &__form {
+    background-color: #FFF;
+    outline: 15px solid rgba(255, 255, 255, 0.15);
+    max-width: 400px;
+    height: 500px;
+    border-radius: 30px;
+  }
+}

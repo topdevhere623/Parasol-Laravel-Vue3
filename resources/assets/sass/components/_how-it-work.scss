@@ -1,0 +1,66 @@
+@import './../variables';
+
+.how-it-work {
+  .content {
+    margin-right: 4rem;
+    max-width: 600px;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 26px;
+  }
+
+  .subtitle {
+    margin-top: 42px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .block {
+    display: flex;
+    padding: 24px 14px 29px 0;
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+
+    &-image {
+      height: 37px;
+      padding-right: 97px;
+    }
+
+    &-link {
+      font-size: 18px;
+      line-height: 20px;
+      text-align: center;
+    }
+  }
+
+  .small-text {
+    line-height: 22px;
+    color: #A4A4A4;
+    margin: 72px 0 68px 0;
+  }
+
+  .image {
+    height: 300px;
+  }
+
+  .added-footer {
+    background: $body-bg;
+    display: flex;
+    padding-top: 25px;
+
+    &-text {
+      justify-content: center;
+      color: #A4A4A4;
+      line-height: 22px;
+    }
+
+    &-img {
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+    }
+  }
+
+}

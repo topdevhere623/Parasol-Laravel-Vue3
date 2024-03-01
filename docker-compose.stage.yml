@@ -1,0 +1,130 @@
+version: "3.8"
+
+x-app-image: &app-image $APP_CONTAINER_IMAGE
+
+x-app-environment: &app-environment
+  APP_URL: https://$HOST_NAME
+  BACKOFFICE_URL: https://admin.$HOST_NAME
+  CRM_URL: https://crm.$HOST_NAME
+  MEMBER_PORTAL_URL: https://member.$HOST_NAME
+
+  APP_KEY: base64:igB+PMVUg+Xqcf4SkFobx/vkHMGmSZjCNmB1/9Nrujg=
+  DB_HOST: stage-database
+  DB_DATABASE: $DB_DATABASE
+  DB_USERNAME: advplus
+  DB_PASSWORD: HrQjx22F
+
+  LEGACY_DB_HOST: stage-database
+  LEGACY_DB_DATABASE: advplus-legacy
+  LEGACY_DB_USERNAME: advplus
+  LEGACY_DB_PASSWORD: HrQjx22F
+
+  LEGACY_CHECKIN_DB_HOST: stage-database
+  LEGACY_CHECKIN_DB_DATABASE: advplus-checkin-legacy
+  LEGACY_CHECKIN_DB_USERNAME: advplus
+  LEGACY_CHECKIN_DB_PASSWORD: HrQjx22F
+
+  MAIL_HOST: $MAIL_HOST
+  MAIL_USERNAME: $MAIL_USERNAME
+  MAIL_PASSWORD: $MAIL_PASSWORD
+  MAIL_ENCRYPTION: tls
+  MAIL_PORT: 587
+
+  LOG_CHANNEL: daily
+
+  APP_ENV: stage
+  APP_DEBUG: 0
+
+  FPM_USER: ${FPM_USER:-1000}
+  FPM_GROUP: ${FPM_GROUP:-1000}
+
+  INSTAGRAM_FEED_ACCESS_TOKEN: $INSTAGRAM_FEED_ACCESS_TOKEN
+
+  REDIS_HOST: stage-redis
+  SESSION_DRIVER: redis
+  CACHE_DRIVER: redis
+  CACHE_PREFIX: $DB_DATABASE_cache
+  REDIS_PREFIX: $DB_DATABASE
+  QUEUE_CONNECTION: redis
+
+  NGINX_UPLOADS_PROXY_HOST: advplus.ae
+
+  #NOCRM_SUBDOMAIN: adv
+  #NOCRM_API_KEY: $NOCRM_API_KEY
+
+services:
+  app:
+    image: *app-image
+    container_name: $APP_CONTAINER_NAME
+    volumes:
+      - $DATA_STORAGE_PATH/storage:/app/storage
+    environment:
+      <<: *app-environment
+    labels:
+      - autoheal=true
+      - traefik.enable=true
+      - traefik.http.routers.$APP_CONTAINER_NAME.entrypoints=websecure
+      - traefik.http.routers.$APP_CONTAINER_NAME.rule=Host(`$HOST_NAME`, `entertainer.$HOST_NAME`)
+      - traefik.http.routers.$APP_CONTAINER_NAME.tls=true
+      - traefik.http.routers.$APP_CONTAINER_NAME.tls.certresolver=letsEncrypt
+      - traefik.http.services.$APP_CONTAINER_NAME.loadbalancer.server.port=80
+    networks:
+      - stage-database
+      - traefik-public
+      - default
+  queue:
+    image: *app-image
+    container_name: "$APP_CONTAINER_NAME-queue"
+    volumes:
+      - $DATA_STORAGE_PATH/storage:/app/storage
+    environment:
+      <<: *app-environment
+    networks:
+      - stage-database
+      - default
+
+  scheduler:
+    image: *app-image
+    container_name: "$APP_CONTAINER_NAME-schedule"
+    volumes:
+      - $DATA_STORAGE_PATH/storage:/app/storage
+    environment:
+      <<: *app-environment
+      MAIL_DRIVER: log
+    networks:
+      - stage-database
+      - default
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "$APP_CONTAINER_NAME-mailhog"
+    restart: on-failure
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: maildir
+    networks:
+      - default
+      - traefik-public
+    volumes:
+      - $DATA_STORAGE_PATH/mailhog:/home/mailhog/maildir
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.$APP_CONTAINER_NAME-mailhog.entrypoints=websecure
+      - traefik.http.routers.$APP_CONTAINER_NAME-mailhog.rule=Host(`mailhog.$HOST_NAME`)
+      - traefik.http.routers.$APP_CONTAINER_NAME-mailhog.tls=true
+      - traefik.http.routers.$APP_CONTAINER_NAME-mailhog.tls.certresolver=letsEncrypt
+      - traefik.http.routers.$APP_CONTAINER_NAME-mailhog.middlewares=traefik-auth
+      - traefik.http.services.$APP_CONTAINER_NAME-mailhog.loadbalancer.server.port=8025
+networks:
+  default:
+    name: $APP_CONTAINER_NAME
+  stage-database:
+    name: "stage-database"
+    external: true
+  traefik-public:
+    name: "traefik-public"
+    external: true
+
+
+volumes:
+  mailhog:

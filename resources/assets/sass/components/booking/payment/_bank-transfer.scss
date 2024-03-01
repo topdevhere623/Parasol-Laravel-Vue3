@@ -1,0 +1,19 @@
+.bankTransferBlock {
+  li {
+    display: inline-block;
+    width: 100%;
+
+    strong {
+      text-transform: capitalize;
+      opacity: .8;
+      margin-right: 3px;
+    }
+
+    span {
+      color: #006fbb;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      cursor: pointer;
+    }
+  }
+}

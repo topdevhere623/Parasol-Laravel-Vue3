@@ -1,0 +1,35 @@
+.blog {
+  .blog-header {
+    background: url(/assets/images/blog/header-background.jpg) no-repeat 50%;
+    background-size: cover;
+    color: #fff;
+    font-weight: 700;
+    height: 334px;
+    padding-top: 170px;
+    position: relative;
+    top: -96px;
+    width: 100%;
+
+    div {
+      position: relative;
+      z-index: 4;
+
+      div {
+        font-size: 12px;
+
+        a, span {
+          padding: 0 12px;
+        }
+      }
+    }
+
+    h1 {
+      font-size: 32px;
+      max-width: 400px;
+    }
+
+    a {
+      color: #FFF !important;
+    }
+  }
+}

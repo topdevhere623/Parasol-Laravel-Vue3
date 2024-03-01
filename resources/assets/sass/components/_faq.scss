@@ -1,0 +1,16 @@
+.faq {
+  .accordion-button {
+
+    &.collapsed {
+      background: $white;
+      color: $black;
+    }
+
+    &:not(.collapsed) {
+      background-color: $white;
+      color: $black;
+    }
+
+
+  }
+}

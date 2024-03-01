@@ -1,0 +1,5 @@
+*
+!public/
+!.gitignore
+!bbc-news-article.html
+!/members-without-plan.csv

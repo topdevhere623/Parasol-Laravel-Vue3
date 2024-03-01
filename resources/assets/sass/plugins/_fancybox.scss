@@ -1,0 +1,27 @@
+@import "~@fancyapps/ui/dist/fancybox.css";
+
+:root {
+  --fancybox-opacity: .3
+}
+
+@keyframes fancybox-fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: var(--fancybox-opacity, 1);
+  }
+}
+
+.carousel__button {
+  &.is-close {
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel__button.is-close {
+    right: 10px;
+  }
+}

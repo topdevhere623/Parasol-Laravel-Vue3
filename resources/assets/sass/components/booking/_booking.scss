@@ -1,0 +1,95 @@
+$main-headers-color: var(--headers-color, #006fbb);
+
+@import "tabby-widget";
+@import "booking-step-progress";
+@import "booking-1-step";
+@import "booking-2-step";
+@import "booking-3-step";
+@import "complete";
+
+.booking-page {
+  padding-bottom: 60px;
+
+  .btn-apply {
+    background: var(--confirm-btn-color, $blue);
+    color: var(--booking-buttons-color, #fff);;
+
+    &:hover {
+      transform: none;
+      color: var(--booking-buttons-color, #fff);;
+      background: var(--confirm-btn-color-hover, #055185);
+    }
+  }
+
+  .btn-back {
+    background: #FFFFFF;
+    border: 3px solid #E3E3E3;
+    box-sizing: border-box;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--confirm-btn-color, $blue);
+    transition: .5s;
+
+    &:hover {
+      border: 3px solid var(--confirm-btn-color, $blue);
+      color: var(--confirm-btn-color, $blue);
+      transform: none;
+    }
+  }
+
+  .input-with-label {
+    position: relative;
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #E3E3E3;
+      border-radius: 5px;
+      padding: 26px 15px 10px 15px;
+      height: 56px;
+      background: white;
+      -webkit-appearance: none;
+    }
+
+    textarea {
+      margin-top: 15px;
+      overflow-y: hidden;
+      width: 100%;
+      border: 1px solid #E3E3E3;
+      border-radius: 5px;
+      padding: 17px 15px 10px 15px;
+      height: 80px;
+      background: white;
+      -webkit-appearance: none;
+    }
+
+    @media (max-width: 820px) {
+      textarea {
+        height: auto;
+      }
+    }
+
+    label {
+      position: absolute;
+      top: 2px;
+      left: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: 0.03em;
+      color: #555555;
+    }
+  }
+
+  .booking-header {
+    color: $main-headers-color !important;
+  }
+}

@@ -1,0 +1,101 @@
+.modal-message {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+
+
+  .modal-content {
+    width: 100%;
+    padding: 40px;
+    background-color: #2D2D2D;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 360px;
+
+
+    &.success {
+      background-color: #4D7011;
+
+      .btn {
+        color: #4D7011;
+      }
+    }
+
+    &.error {
+      background-color: #808075;
+
+      .btn {
+        color: #808075;
+      }
+    }
+
+    h4 {
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: white;
+      margin-top: 6px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      color: white;
+    }
+
+    .btn {
+      margin-top: 25px;
+
+      &.btn-white {
+        color: #2D2D2D;
+      }
+    }
+  }
+
+  .input-checkbox {
+    opacity: 0;
+  }
+
+  label {
+    display: flex;
+    line-height: 25px;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 35px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    color: white;
+    justify-content: inherit;
+
+    &::before {
+      content: '';
+      position: relative;
+      margin-right: 10px;
+      border: 2px solid #E3E3E3;
+      border-radius: 5px;
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  .input-checkbox:checked + label::before {
+    background: #fff url(/assets/images/checked_coral.svg) no-repeat center !important;
+    border-color: #fff;
+    background-size: 15px;
+  }
+
+  .alert-list {
+    color: white;
+    text-align: left;
+  }
+}

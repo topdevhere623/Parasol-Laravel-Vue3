@@ -1,0 +1,295 @@
+.setup-stage-ssh: &setup-stage-ssh
+  # Setup ssh connection
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - echo "${STAGE_SERVER_SSH_KEY}" | tr -d '\r' | ssh-add -
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+  # Prepare remote files
+  - |
+    export FPM_USER=$(ssh $SSH_AUTH id -u) \
+           FPM_GROUP=$(ssh $SSH_AUTH id -g)
+
+variables: &global-variables
+  APP_CONTAINER_IMAGE: "advplus-app:$CI_COMMIT_BRANCH.$CI_COMMIT_SHORT_SHA"
+  APP_CONTAINER_NAME: advplus-$CI_COMMIT_BRANCH-app
+  PROJECT_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/$CI_COMMIT_BRANCH
+  DATA_STORAGE_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/$CI_COMMIT_BRANCH/data
+  SSH_AUTH: $STAGE_SERVER_SSH_USER@$STAGE_SERVER_SSH_IP
+
+  RELEASE_VERSION: $CI_COMMIT_SHORT_SHA
+
+stages:
+  - build
+  - test
+  - staging
+  - release-and-deploy
+before_script: &base-before-script
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+
+build:
+  stage: build
+  script:
+    - cp .env.example .env
+    - docker build --pull -t $APP_CONTAINER_IMAGE -f ./docker/.dockerfile ./
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+php-unit-test:
+  stage: test
+  variables:
+    APP_CONTAINER_NAME: advplus-$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-test-app
+    APP_CONTAINER_ART: advplus-$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-test-app php artisan
+    TEMP_DATABASE: advplus_${TEMP_DATABASE//-/_}_${CI_COMMIT_SHORT_SHA}
+  artifacts:
+    when: on_failure
+    paths:
+      - storage/logs/laravel.log
+    expire_in: 1 week
+  script:
+    - export FPM_USER=$(id -u) FPM_GROUP=$(id -g)
+    - docker-compose -f docker-compose.base.yml -f docker-compose.unit.yml config > docker-compose.yml
+    - docker-compose down --remove-orphans -v
+    - |
+      docker exec -i stage-database sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' <<<  \
+        "START TRANSACTION;
+         DROP DATABASE IF EXISTS $TEMP_DATABASE;
+         CREATE DATABASE $TEMP_DATABASE;
+         GRANT ALL PRIVILEGES ON $TEMP_DATABASE.* TO 'advplus'@'localhost'  identified by 'advplus';
+         COMMIT;
+         "
+    - docker exec -i stage-database sh -c "exec mysql -uroot -p\"\$MYSQL_ROOT_PASSWORD\" $TEMP_DATABASE" < /home/prsl/containers/stage-database/advplus.sql
+    - docker-compose up -d --no-deps app
+    - docker exec $APP_CONTAINER_ART config:clear
+    - docker exec $APP_CONTAINER_ART optimize:clear
+    - docker exec $APP_CONTAINER_ART key:generate
+    - docker exec $APP_CONTAINER_ART passport:keys --length=2048 || true
+    - docker exec $APP_CONTAINER_ART migrate --force
+    - docker exec $APP_CONTAINER_ART optimize
+    - docker exec $APP_CONTAINER_NAME sh -c  "php artisan config:clear && php artisan test"
+  after_script:
+    - docker exec -i stage-database sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' <<<  "DROP DATABASE IF EXISTS $TEMP_DATABASE;"
+    - docker-compose down --remove-orphans -v
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+php-cs-fixer:
+  stage: test
+  variables:
+    APP_CONTAINER_NAME: advplus-$CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA-cs-fixer-app
+  script:
+    - export FPM_USER=$(id -u) FPM_GROUP=$(id -g)
+    - docker-compose -f docker-compose.base.yml -f docker-compose.unit.yml config > docker-compose.yml
+    - docker-compose run --rm --name=$APP_CONTAINER_NAME --no-deps app vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+
+.deploy-to-stage: &deploy-to-stage
+  variables:
+    BRANCH_ALIAS: $CI_COMMIT_BRANCH
+  before_script:
+    - *base-before-script
+    - export STAGE_SUBDOMAIN=$(echo $BRANCH_ALIAS | sed "s/feature-//1; s/fix-//1")
+    - export HOST_NAME=${HOST_NAME:-$STAGE_SUBDOMAIN.$STAGE_HOST_NAME}
+    - export DB_DATABASE=advplus_${DB_DATABASE:-${BRANCH_ALIAS//-/_}}
+  script:
+
+    - *setup-stage-ssh
+    - docker-compose -f docker-compose.base.yml -f docker-compose.stage.yml config > docker-compose.yml
+    - ssh -o StrictHostKeyChecking=no $SSH_AUTH "mkdir -p $DATA_STORAGE_PATH"
+    - scp -o StrictHostKeyChecking=no docker-compose.yml $SSH_AUTH:$PROJECT_PATH
+    - scp -o StrictHostKeyChecking=no -r ./storage $SSH_AUTH:$DATA_STORAGE_PATH
+    # Deploy script
+    - |
+      ssh -o StrictHostKeyChecking=no $SSH_AUTH bash << EOT
+        #!/usr/bin bash
+        set -ex +u
+        docker exec -i stage-database sh -c "mysql -u root -p\"\\\$MYSQL_ROOT_PASSWORD\" $DB_DATABASE -e exit > /dev/null 2>&1" || \
+          (docker exec -i stage-database sh -c "exec mysql -uroot -p\"\\\$MYSQL_ROOT_PASSWORD\"" <<<  \
+            "START TRANSACTION;
+              DROP DATABASE IF EXISTS $DB_DATABASE; CREATE DATABASE $DB_DATABASE; GRANT ALL PRIVILEGES ON $DB_DATABASE.* TO 'advplus'@'localhost'  identified by 'advplus';
+              COMMIT;" \
+          && docker exec -i stage-database sh -c "exec mysql -uroot -p\"\\\$MYSQL_ROOT_PASSWORD\" $DB_DATABASE" < /home/prsl/containers/stage-database/advplus.sql)
+      EOT
+    - |
+      ssh -o StrictHostKeyChecking=no $SSH_AUTH bash << EOT
+        #!/usr/bin bash
+        set -ex +u
+        cd $PROJECT_PATH
+        mkdir -p $DATA_STORAGE_PATH/mailhog && chmod 777 $DATA_STORAGE_PATH/mailhog
+        docker-compose -p $APP_CONTAINER_NAME up -d --force-recreate
+        docker exec $APP_CONTAINER_NAME php artisan passport:keys --length=2048 || true
+        docker exec $APP_CONTAINER_NAME php artisan migrate --force
+        docker exec $APP_CONTAINER_NAME php artisan optimize
+      EOT
+  after_script:
+    - rm docker-compose.yml
+  allow_failure: false
+  environment:
+    name: stage/$CI_COMMIT_BRANCH
+    auto_stop_in: 60 days
+    deployment_tier: development
+    on_stop: stop-stage-branch
+
+stop-stage-branch:
+  extends:
+    .deploy-to-stage
+  stage: staging
+  variables:
+    GIT_STRATEGY: none
+  environment:
+    name: stage/$CI_COMMIT_BRANCH
+    action: stop
+  script:
+    - *setup-stage-ssh
+    # Deploy script
+    - |
+      ssh -o StrictHostKeyChecking=no $SSH_AUTH bash << EOT
+        #!/usr/bin bash
+        set -ex +u
+        docker-compose -p $APP_CONTAINER_NAME -f $PROJECT_PATH/docker-compose.yml down --rmi all --volumes --remove-orphans --timeout 1
+        rm -rf $PROJECT_PATH
+        docker exec -i stage-database sh -c "exec mysql -uroot -p\"\\\$MYSQL_ROOT_PASSWORD\"" <<< "START TRANSACTION; DROP DATABASE IF EXISTS $DB_DATABASE; COMMIT;"
+      EOT
+  after_script: #remove from extended
+  when: manual
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+refresh-db-and-migrate:
+  extends:
+    .deploy-to-stage
+  stage: staging
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - *setup-stage-ssh
+    # Deploy script
+    - |
+      ssh -o StrictHostKeyChecking=no $SSH_AUTH bash << EOT
+        #!/usr/bin bash
+        set -ex +u
+        docker exec -i stage-database sh -c "exec mysql -uroot -p\"\\\$MYSQL_ROOT_PASSWORD\"" <<<  \
+          "START TRANSACTION;
+            DROP DATABASE IF EXISTS $DB_DATABASE; CREATE DATABASE $DB_DATABASE; GRANT ALL PRIVILEGES ON $DB_DATABASE.* TO 'advplus'@'localhost'  identified by 'advplus';
+            COMMIT;" \
+        && docker exec -i stage-database sh -c "exec mysql -uroot -p\"\\\$MYSQL_ROOT_PASSWORD\" $DB_DATABASE" < /home/prsl/containers/stage-database/advplus.sql
+      EOT
+    - docker exec $APP_CONTAINER_NAME php artisan migrate --force
+  after_script: #remove from extended
+  when: manual
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+deploy-to-production:
+  stage: release-and-deploy
+  variables:
+    HOST_NAME: $ADVPLUS_HOST_NAME
+    APP_CONTAINER_NAME: advplus-production-app
+    SSH_AUTH: $PROD_SERVER_SSH_USER@$PROD_SERVER_SSH_IP
+    DATA_STORAGE_PATH: ~/projects/$CI_PROJECT_NAME/app/data
+    PROJECT_PATH: ~/projects/$CI_PROJECT_NAME/app
+    APP_REGISTRY_CONTAINER_IMAGE: $CI_REGISTRY_IMAGE/app:$CI_COMMIT_SHORT_SHA
+    SENTRY_RELEASE_VERSION: $RELEASE_VERSION
+  script:
+    # Push image
+    - docker tag $APP_CONTAINER_IMAGE $APP_REGISTRY_CONTAINER_IMAGE
+    - docker push $APP_REGISTRY_CONTAINER_IMAGE
+
+    # Sentry release
+    - mkdir -p ./dist/assets
+    - docker cp $(docker create --rm $APP_CONTAINER_IMAGE):/app/public/assets/js ./dist/assets
+    - echo "Create a new sentry release $SENTRY_RELEASE_VERSION"
+    - |
+      docker run --rm -u "$(id -u):$(id -g)" -e SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN -w /app -v $(pwd):/app getsentry/sentry-cli sh -c " \
+        sentry-cli releases new $SENTRY_RELEASE_VERSION && \
+        sentry-cli releases set-commits --auto $SENTRY_RELEASE_VERSION  && \
+        sentry-cli releases files $SENTRY_RELEASE_VERSION upload-sourcemaps ./dist && \
+        sentry-cli releases deploys "$SENTRY_RELEASE_VERSION" new -e production
+        sentry-cli releases finalize $SENTRY_RELEASE_VERSION"
+    - echo "Finalized release for $SENTRY_RELEASE_VERSION"
+
+    # Setup ssh connection
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo "${PROD_SERVER_SSH_KEY}" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - |
+      export FPM_USER=$(ssh $SSH_AUTH id -u) \
+              FPM_GROUP=$(ssh $SSH_AUTH id -g) \
+              APP_CONTAINER_IMAGE="$APP_REGISTRY_CONTAINER_IMAGE" \
+              DB_HOST="$PROD_DB_HOST" \
+              DB_DATABASE="$PROD_DB_DATABASE" \
+              DB_USERNAME="$PROD_DB_USERNAME" \
+              DB_PASSWORD="$PROD_DB_PASSWORD" \
+              PASSPORT_PRIVATE_KEY="$OAUTH_PRIVATE_KEY" \
+              PASSPORT_PUBLIC_KEY="$OAUTH_PUBLIC_KEY"
+
+    - docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml config > docker-compose.yml
+    - ssh -o StrictHostKeyChecking=no $SSH_AUTH "mkdir -p $DATA_STORAGE_PATH"
+    - scp -o StrictHostKeyChecking=no docker-compose.yml $SSH_AUTH:$PROJECT_PATH
+    - |
+      ssh -o StrictHostKeyChecking=no $SSH_AUTH sh << EOT
+          #!/usr/bin/env sh
+          set -eux
+          cd $PROJECT_PATH
+          docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+          docker-compose pull app
+          docker stack deploy -c docker-compose.yml --resolve-image changed --with-registry-auth advplus-app
+          docker-compose run --rm app php artisan migrate --force
+      EOT
+  after_script:
+    - rm docker-compose.yml
+  only:
+    - master
+  when: manual
+  allow_failure: false
+  environment:
+    name: production
+    url: $ADVPLUS_HOST_NAME
+    deployment_tier: production
+
+
+deploy-stage-branch:
+  stage: staging
+  <<: *deploy-to-stage
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^feature/ || $CI_COMMIT_BRANCH =~ /^fix/
+
+
+deploy-to-test:
+  <<: *deploy-to-stage
+  stage: staging
+  variables:
+    BRANCH_ALIAS: test
+    APP_CONTAINER_NAME: advplus-test-app
+    PROJECT_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/test
+    DATA_STORAGE_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/test/data
+    HOST_NAME: test.$STAGE_HOST_NAME
+  environment:
+    name: test
+    deployment_tier: testing
+  allow_failure: false
+  only:
+    - master
+
+deploy-to-sandbox:
+  <<: *deploy-to-stage
+  stage: release-and-deploy
+  variables:
+    BRANCH_ALIAS: sandbox
+    APP_CONTAINER_NAME: advplus-sandbox-app
+    PROJECT_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/sandbox
+    DATA_STORAGE_PATH: /home/$STAGE_SERVER_SSH_USER/projects/$CI_PROJECT_NAME/sandbox/data
+    HOST_NAME: sandbox.$ADVPLUS_HOST_NAME
+    TABBY_CHECK_PENDING_PAYMENTS: 1
+  environment:
+    name: sandbox
+    deployment_tier: production
+  allow_failure: false
+  only:
+    - master

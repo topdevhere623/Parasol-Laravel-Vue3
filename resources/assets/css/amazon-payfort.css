@@ -1,0 +1,28 @@
+/*
+    This file should be uploaded to amazon form (in dashboard)
+*/
+
+.installments-container {
+    margin: 15px auto !important;
+}
+
+.reciept-container {
+    display: none !important;
+}
+
+.body-background {
+    overflow: hidden !important;
+    background-color: #fff !important;
+}
+
+.pay {
+    background: #055185 !important;
+}
+
+@media screen and (max-width: 480px) {
+    .installments-container {
+        width: 100%;
+        margin-top: 0;
+        box-shadow: none;
+    }
+}

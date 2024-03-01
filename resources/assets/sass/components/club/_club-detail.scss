@@ -1,0 +1,60 @@
+.page-header.page-header-club-detail {
+  .address {
+    color: #8B9198;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.club-detail {
+  .info {
+    font-size: 22px;
+    line-height: 1.5;
+    color: #363D45;
+  }
+
+  .club-photos {
+    width: 100%;
+    position: relative;
+    margin-top: -70px;
+    margin-bottom: 35px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__left-col,
+    &__right-col {
+      width: 50%;
+      position: relative;
+    }
+
+    &__right-col {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &__left-col img,
+    &__right-col img {
+      max-width: 100% !important;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    &__left-col a,
+    &__right-col a {
+      padding: 3px;
+      overflow: hidden;
+    }
+
+    &__right-col a {
+      width: 50%;
+    }
+  }
+
+  &__swiper {
+    @include club-gallery-swiper;
+  }
+}

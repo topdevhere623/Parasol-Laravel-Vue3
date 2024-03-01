@@ -1,0 +1,6 @@
+.easy-steps {
+  margin-top: 0 !important;
+  @include media-breakpoint-down(sm) {
+    margin-top: 48px !important;
+  }
+}
